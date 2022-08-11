@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { currentUserContext } from '../contexts/CurrentUserContext.js';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import api from '../utils/api.js';
-import Header from './Header';
+import Header from './Header.js';
 import Main from './Main.js';
 import Footer from './Footer.js';
 import ImagePopup from './ImagePopup.js';
@@ -9,16 +10,19 @@ import EditProfilePopup from './EditProfilePopup.js';
 import EditAvatarPopup from './EditAvatarPopup.js';
 import AddPlacePopup from './AddPlacePopup.js';
 import ConfirmDeletePopup from './ConfirmDeletePopup.js';
+import Login from './Login.js';
+import Register from './Register.js';
 
 function App() {
-    const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
-    const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
-    const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
-    const [selectedCard, setSelectedCard] = React.useState(null);
-    const [currentUser, setCurrentUser] = React.useState(null);
-    const [cardDelete, setCardDelete] = React.useState(null);
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [cards, setCards] = React.useState([]);
+    const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
+    const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+    const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+    const [selectedCard, setSelectedCard] = useState(null);
+    const [currentUser, setCurrentUser] = useState(null);
+    const [cardDelete, setCardDelete] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [cards, setCards] = useState([]);
+    const [LoggedIn, setLoggedIn] = useState(false);
 
     const openedPopup =
         isEditProfilePopupOpen ||
@@ -37,19 +41,19 @@ function App() {
     }
 
     function handleOverlayClick(e) {
-        if(e.target === e.currentTarget) {
+        if (e.target === e.currentTarget) {
             closeAllPopups();
         }
     }
 
     React.useEffect(() => {
         function handleEscClose(e) {
-            if(e.key === 'Escape') {
+            if (e.key === 'Escape') {
                 closeAllPopups();
             }
         }
 
-        if(openedPopup) {
+        if (openedPopup) {
             document.addEventListener('keydown', handleEscClose);
             return () => document.removeEventListener('keydown', handleEscClose);
         }
@@ -155,15 +159,29 @@ function App() {
         <currentUserContext.Provider value={currentUser}>
             <div className="page">
                 <Header />
-                <Main
-                    onEditProfile={handleEditProfileClick}
-                    onAddPlace={handleAddPlaceClick}
-                    onEditAvatar={handleEditAvatar}
-                    onCardClick={handleCardClick}
-                    cards={cards}
-                    onCardLike={handleCardLike}
-                    onTrashClick={hadnleTrashClick}
-                />
+                <Switch>
+                    <Route exact path="/">
+                        <Main
+                            onEditProfile={handleEditProfileClick}
+                            onAddPlace={handleAddPlaceClick}
+                            onEditAvatar={handleEditAvatar}
+                            onCardClick={handleCardClick}
+                            cards={cards}
+                            onCardLike={handleCardLike}
+                            onTrashClick={hadnleTrashClick}
+                        />
+                    </Route>
+                    <Route path="/sign-in">
+                        <Login />
+                    </Route>
+                    <Route path="/sign-up">
+                        <Register />
+                    </Route>
+                    {/* <Route>
+                        {LoggedIn ? <Redirect to="/" /> : <Redirect to="/sign-up" />}
+                    </Route> */}
+                </Switch>
+
                 <Footer />
                 <EditProfilePopup
                     isOpen={isEditProfilePopupOpen}
