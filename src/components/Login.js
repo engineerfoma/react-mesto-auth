@@ -18,10 +18,9 @@ function Login({ onLogin }) {
     function handleSubmit(e) {
         e.preventDefault();
         if (!loginData.email || !loginData.password) {
-            return alert('!');
+            return;
         }
         onLogin(loginData)
-            .catch(err => `${err}: ${err.meassage}`);
     }
 
 

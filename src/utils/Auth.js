@@ -24,7 +24,7 @@ export const authorize = ({ email, password }) => {
     headers,
     body: JSON.stringify({ email, password })
   })
-    .then(response => response.json())
+    .then(res => checkResponse(res));
 };
 
 export const getContent = (token) => {
@@ -35,5 +35,5 @@ export const getContent = (token) => {
       'Authorization': `Bearer ${token}`
     },
   })
-    .then(res => res.json());
+    .then(res => checkResponse(res));
 };

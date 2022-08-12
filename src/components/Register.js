@@ -18,8 +18,7 @@ function Register({ onRegister }) {
 
     function handleSubmit(e) {
         e.preventDefault();
-        onRegister(registerData)
-            .catch(err => `${err}: ${err.message}`);
+        onRegister(registerData);
     }
 
     return (

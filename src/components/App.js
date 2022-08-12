@@ -21,14 +21,15 @@ function App() {
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
     const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
-    // const [isTooltipPopupOpen, setIsTooltipPopupOpen] = useState(false);
+    const [isTooltipPopupOpen, setIsTooltipPopupOpen] = useState(false);
     const [selectedCard, setSelectedCard] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
     const [cardDelete, setCardDelete] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [cards, setCards] = useState([]);
-    const [login, setLogin] = useState('');
+    const [login, setLogin] = useState(null);
     const [loggedIn, setLoggedIn] = useState(false);
+    const [isAccess, setIsAccess] = useState(false);
 
 
     const openedPopup =
@@ -36,8 +37,8 @@ function App() {
         isAddPlacePopupOpen ||
         isEditAvatarPopupOpen ||
         cardDelete ||
-        selectedCard;
-    // isTooltipPopupOpen;
+        selectedCard ||
+        isTooltipPopupOpen;
 
     const history = useHistory();
 
@@ -45,7 +46,7 @@ function App() {
         setIsEditAvatarPopupOpen(false);
         setIsEditProfilePopupOpen(false);
         setIsAddPlacePopupOpen(false);
-        // isTooltipPopupOpen(false);
+        setIsTooltipPopupOpen(false);
         setCardDelete(null);
         setSelectedCard(null)
     }
@@ -64,8 +65,8 @@ function App() {
 
         Auth
             .getContent(jwt)
-            .then(({ email }) => {
-                setLogin({ email });
+            .then((res) => {
+                setLogin(res.data.email);
                 setLoggedIn(true);
             })
     }
@@ -180,13 +181,25 @@ function App() {
                 setLoggedIn(true);
                 localStorage.setItem('jwt', res.token);
             })
+            .catch(err => {
+                setIsAccess(false);
+                setIsTooltipPopupOpen(true);
+                return `${err}: ${err.message}`;
+            })
     }
 
     function onRegister(data) {
         return Auth
             .register(data)
             .then(() => {
+                setIsTooltipPopupOpen(true);
+                setIsAccess(true);
                 history.push('/sign-in');
+            })
+            .catch(err => {
+                setIsAccess(false);
+                setIsTooltipPopupOpen(true);
+                return `${err}: ${err.message}`;
             })
     }
 
@@ -285,10 +298,10 @@ function App() {
                     onOverlayClick={handleOverlayClick}
                 />
                 <InfoTooltip
-                    isOpen={false}
+                    isOpen={isTooltipPopupOpen}
                     onClose={closeAllPopups}
                     onOverlayClick={handleOverlayClick}
-                    access={123}
+                    access={isAccess}
                 />
             </div>
         </currentUserContext.Provider >
