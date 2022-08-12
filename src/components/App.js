@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { currentUserContext } from '../contexts/CurrentUserContext.js';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 import api from '../utils/api.js';
 import Header from './Header.js';
 import Main from './Main.js';
@@ -14,6 +14,7 @@ import Login from './Login.js';
 import Register from './Register.js';
 import InfoTooltip from './InfoTooltip.js';
 import ProtectedRoute from './ProtectedRoute.js';
+import * as Auth from '../utils/Auth.js';
 
 
 function App() {
@@ -26,7 +27,9 @@ function App() {
     const [cardDelete, setCardDelete] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [cards, setCards] = useState([]);
-    const [loggedIn, setLoggedIn] = useState(true);
+    const [login, setLogin] = useState('');
+    const [loggedIn, setLoggedIn] = useState(false);
+
 
     const openedPopup =
         isEditProfilePopupOpen ||
@@ -36,6 +39,7 @@ function App() {
         selectedCard;
     // isTooltipPopupOpen;
 
+    const history = useHistory();
 
     function closeAllPopups() {
         setIsEditAvatarPopupOpen(false);
@@ -52,7 +56,27 @@ function App() {
         }
     }
 
-    React.useEffect(() => {
+    function tokenCheck() {
+        let jwt = localStorage.getItem('jwt');
+        if (!jwt) {
+            return;
+        }
+
+        Auth
+            .getContent(jwt)
+            .then(({ email }) => {
+                setLogin({ email });
+                setLoggedIn(true);
+            })
+    }
+
+    useEffect(() => {
+        if (loggedIn) {
+            history.push('/');
+        }
+    }, [loggedIn, history])
+
+    useEffect(() => {
         function handleEscClose(e) {
             if (e.key === 'Escape') {
                 closeAllPopups();
@@ -148,15 +172,31 @@ function App() {
             });
     }
 
-    function onLogin() {
-
+    function onLogin(data) {
+        return Auth
+            .authorize(data)
+            .then((res) => {
+                setLogin(data.email);
+                setLoggedIn(true);
+                localStorage.setItem('jwt', res.token);
+            })
     }
 
-    function onRegister() {
-
+    function onRegister(data) {
+        return Auth
+            .register(data)
+            .then(() => {
+                history.push('/sign-in');
+            })
     }
 
-    React.useEffect(() => {
+    function onLogout() {
+        setLoggedIn(false);
+        localStorage.removeItem('jwt');
+        history.push('/sign-in');
+    }
+
+    useEffect(() => {
         api.getUserInfo()
             .then(res => {
                 setCurrentUser(res);
@@ -167,13 +207,15 @@ function App() {
                 setCards(res);
             })
             .catch(err => console.log(`Ошибка: ${err}`));
+        tokenCheck();
     }, [])
 
     return (
         <currentUserContext.Provider value={currentUser}>
             <div className="page">
                 <Header
-                    email={123}
+                    login={login}
+                    onLogout={onLogout}
                 />
                 <Switch>
                     <ProtectedRoute

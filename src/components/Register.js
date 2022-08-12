@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthWithForm from './AuthWithForm';
 
 function Register({ onRegister }) {
     const [registerData, setRegisterData] = useState({
-        fieldEmail: '',
-        fieldPassword: '',
+        email: '',
+        password: '',
     });
 
     function handleChange(e) {
@@ -32,10 +32,10 @@ function Register({ onRegister }) {
             >
                 <div className="auth__form_item">
                     <input
-                        type="text"
+                        type="email"
                         id="email-input"
-                        name="fieldEmail"
-                        value={registerData.fieldEmail}
+                        name="email"
+                        value={registerData.email}
                         onChange={handleChange}
                         placeholder="Email"
                         className="auth__input auth__input_email"
@@ -48,8 +48,8 @@ function Register({ onRegister }) {
                     <input
                         type="password"
                         id="password-input"
-                        name="fieldPassword"
-                        value={registerData.fieldPassword}
+                        name="password"
+                        value={registerData.password}
                         onChange={handleChange}
                         placeholder="Пароль"
                         className="auth__input auth__input_password"

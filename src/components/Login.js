@@ -3,8 +3,8 @@ import AuthWithForm from './AuthWithForm';
 
 function Login({ onLogin }) {
     const [loginData, setLoginData] = useState({
-        fieldEmail: '',
-        fieldPassword: '',
+        email: '',
+        password: '',
     })
 
     function handleChange(e) {
@@ -17,6 +17,9 @@ function Login({ onLogin }) {
 
     function handleSubmit(e) {
         e.preventDefault();
+        if (!loginData.email || !loginData.password) {
+            return alert('!');
+        }
         onLogin(loginData)
             .catch(err => `${err}: ${err.meassage}`);
     }
@@ -31,10 +34,10 @@ function Login({ onLogin }) {
         >
             <div className="auth__form_item">
                 <input
-                    type="text"
+                    type="email"
                     id="email-input"
-                    name="fieldEmail"
-                    value={loginData.fieldEmail}
+                    name="email"
+                    value={loginData.email}
                     onChange={handleChange}
                     placeholder="Email"
                     className="auth__input auth__input_email"
@@ -47,8 +50,8 @@ function Login({ onLogin }) {
                 <input
                     type="password"
                     id="password-input"
-                    name="fieldPassword"
-                    value={loginData.fieldPassword}
+                    name="password"
+                    value={loginData.password}
                     onChange={handleChange}
                     placeholder="Пароль"
                     className="auth__input auth__input_password"
