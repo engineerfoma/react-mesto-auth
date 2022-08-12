@@ -12,17 +12,21 @@ import AddPlacePopup from './AddPlacePopup.js';
 import ConfirmDeletePopup from './ConfirmDeletePopup.js';
 import Login from './Login.js';
 import Register from './Register.js';
+import InfoTooltip from './InfoTooltip.js';
+import ProtectedRoute from './ProtectedRoute.js';
+
 
 function App() {
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
     const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+    // const [isTooltipPopupOpen, setIsTooltipPopupOpen] = useState(false);
     const [selectedCard, setSelectedCard] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
     const [cardDelete, setCardDelete] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [cards, setCards] = useState([]);
-    const [LoggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(true);
 
     const openedPopup =
         isEditProfilePopupOpen ||
@@ -30,12 +34,14 @@ function App() {
         isEditAvatarPopupOpen ||
         cardDelete ||
         selectedCard;
+    // isTooltipPopupOpen;
 
 
     function closeAllPopups() {
         setIsEditAvatarPopupOpen(false);
         setIsEditProfilePopupOpen(false);
         setIsAddPlacePopupOpen(false);
+        // isTooltipPopupOpen(false);
         setCardDelete(null);
         setSelectedCard(null)
     }
@@ -142,6 +148,14 @@ function App() {
             });
     }
 
+    function onLogin() {
+
+    }
+
+    function onRegister() {
+
+    }
+
     React.useEffect(() => {
         api.getUserInfo()
             .then(res => {
@@ -158,30 +172,42 @@ function App() {
     return (
         <currentUserContext.Provider value={currentUser}>
             <div className="page">
-                <Header />
+                <Header
+                    email={123}
+                />
                 <Switch>
-                    <Route exact path="/">
-                        <Main
-                            onEditProfile={handleEditProfileClick}
-                            onAddPlace={handleAddPlaceClick}
-                            onEditAvatar={handleEditAvatar}
-                            onCardClick={handleCardClick}
-                            cards={cards}
-                            onCardLike={handleCardLike}
-                            onTrashClick={hadnleTrashClick}
+                    <ProtectedRoute
+                        exact
+                        path="/"
+                        loggedIn={loggedIn}
+                        component={Main}
+                        onEditProfile={handleEditProfileClick}
+                        onAddPlace={handleAddPlaceClick}
+                        onEditAvatar={handleEditAvatar}
+                        onCardClick={handleCardClick}
+                        cards={cards}
+                        onCardLike={handleCardLike}
+                        onTrashClick={hadnleTrashClick}
+                    />
+                    <Route path="/sign-in">
+                        <Login
+                            onLogin={onLogin}
                         />
                     </Route>
-                    <Route path="/sign-in">
-                        <Login />
-                    </Route>
                     <Route path="/sign-up">
-                        <Register />
+                        <Register
+                            onRegister={onRegister}
+                        />
                     </Route>
-                    {/* <Route>
-                        {LoggedIn ? <Redirect to="/" /> : <Redirect to="/sign-up" />}
-                    </Route> */}
-                </Switch>
+                    <Route>
+                        {loggedIn ? (
+                            <Redirect to="/" />
+                        ) : (
+                            <Redirect to="/sign-in" />
+                        )}
+                    </Route>
 
+                </Switch>
                 <Footer />
                 <EditProfilePopup
                     isOpen={isEditProfilePopupOpen}
@@ -216,8 +242,14 @@ function App() {
                     onClose={closeAllPopups}
                     onOverlayClick={handleOverlayClick}
                 />
+                <InfoTooltip
+                    isOpen={false}
+                    onClose={closeAllPopups}
+                    onOverlayClick={handleOverlayClick}
+                    access={123}
+                />
             </div>
-        </currentUserContext.Provider>
+        </currentUserContext.Provider >
     );
 }
 

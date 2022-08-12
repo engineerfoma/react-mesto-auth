@@ -2,9 +2,25 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthWithForm from './AuthWithForm';
 
-function Register({ handleSubmit, handleChangeEmail, handleChangePassword }) {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+function Register({ onRegister }) {
+    const [registerData, setRegisterData] = useState({
+        fieldEmail: '',
+        fieldPassword: '',
+    });
+
+    function handleChange(e) {
+        const { name, value } = e.target;
+        setRegisterData({
+            ...registerData,
+            [name]: value,
+        })
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        onRegister(registerData)
+            .catch(err => `${err}: ${err.message}`);
+    }
 
     return (
         <>
@@ -19,8 +35,8 @@ function Register({ handleSubmit, handleChangeEmail, handleChangePassword }) {
                         type="text"
                         id="email-input"
                         name="fieldEmail"
-                        value={email}
-                        onChange={handleChangeEmail}
+                        value={registerData.fieldEmail}
+                        onChange={handleChange}
                         placeholder="Email"
                         className="auth__input auth__input_email"
                         minLength="2"
@@ -33,8 +49,8 @@ function Register({ handleSubmit, handleChangeEmail, handleChangePassword }) {
                         type="password"
                         id="password-input"
                         name="fieldPassword"
-                        value={password}
-                        onChange={handleChangePassword}
+                        value={registerData.fieldPassword}
+                        onChange={handleChange}
                         placeholder="Пароль"
                         className="auth__input auth__input_password"
                         required
@@ -43,7 +59,7 @@ function Register({ handleSubmit, handleChangeEmail, handleChangePassword }) {
             </AuthWithForm>
             <div className="link">
                 <span className="link__title">Уже зарегистрированы?</span>
-                <Link className="link__enter hover">Войти</Link>
+                <Link to="/sign-in" className="link__enter hover">Войти</Link>
             </div>
         </>
     )

@@ -1,9 +1,26 @@
 import React, { useState } from 'react';
 import AuthWithForm from './AuthWithForm';
 
-function Login({ handleSubmit, handleChangeEmail, handleChangePassword }) {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+function Login({ onLogin }) {
+    const [loginData, setLoginData] = useState({
+        fieldEmail: '',
+        fieldPassword: '',
+    })
+
+    function handleChange(e) {
+        const { name, value } = e.target;
+        setLoginData({
+            ...loginData,
+            [name]: value,
+        })
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        onLogin(loginData)
+            .catch(err => `${err}: ${err.meassage}`);
+    }
+
 
     return (
         <AuthWithForm
@@ -17,8 +34,8 @@ function Login({ handleSubmit, handleChangeEmail, handleChangePassword }) {
                     type="text"
                     id="email-input"
                     name="fieldEmail"
-                    value={email}
-                    onChange={handleChangeEmail}
+                    value={loginData.fieldEmail}
+                    onChange={handleChange}
                     placeholder="Email"
                     className="auth__input auth__input_email"
                     minLength="2"
@@ -31,8 +48,8 @@ function Login({ handleSubmit, handleChangeEmail, handleChangePassword }) {
                     type="password"
                     id="password-input"
                     name="fieldPassword"
-                    value={password}
-                    onChange={handleChangePassword}
+                    value={loginData.fieldPassword}
+                    onChange={handleChange}
                     placeholder="Пароль"
                     className="auth__input auth__input_password"
                     required
