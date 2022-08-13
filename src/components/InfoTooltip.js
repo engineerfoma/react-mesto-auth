@@ -1,4 +1,3 @@
-import React from 'react';
 import Union from '../images/Union.svg';
 import UnionErr from '../images/Union_err.svg';
 

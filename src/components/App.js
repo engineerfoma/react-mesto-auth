@@ -69,6 +69,7 @@ function App() {
                 setLogin(res.data.email);
                 setLoggedIn(true);
             })
+            .catch(err => console.log(`Ошибка: ${err}`));
     }
 
     useEffect(() => {
@@ -76,6 +77,43 @@ function App() {
             history.push('/');
         }
     }, [loggedIn, history])
+
+
+    function onLogin(data) {
+        return Auth
+            .authorize(data)
+            .then((res) => {
+                setLogin(data.email);
+                setLoggedIn(true);
+                localStorage.setItem('jwt', res.token);
+            })
+            .catch(err => {
+                setIsAccess(false);
+                setIsTooltipPopupOpen(true);
+                return `${err}: ${err.message}`;
+            })
+    }
+
+    function onRegister(data) {
+        return Auth
+            .register(data)
+            .then(() => {
+                setIsTooltipPopupOpen(true);
+                setIsAccess(true);
+                history.push('/sign-in');
+            })
+            .catch(err => {
+                setIsAccess(false);
+                setIsTooltipPopupOpen(true);
+                return `${err}: ${err.message}`;
+            })
+    }
+
+    function onLogout() {
+        setLoggedIn(false);
+        localStorage.removeItem('jwt');
+        history.push('/sign-in');
+    }
 
     useEffect(() => {
         function handleEscClose(e) {
@@ -171,42 +209,6 @@ function App() {
             .finally(() => {
                 setIsLoading(false);
             });
-    }
-
-    function onLogin(data) {
-        return Auth
-            .authorize(data)
-            .then((res) => {
-                setLogin(data.email);
-                setLoggedIn(true);
-                localStorage.setItem('jwt', res.token);
-            })
-            .catch(err => {
-                setIsAccess(false);
-                setIsTooltipPopupOpen(true);
-                return `${err}: ${err.message}`;
-            })
-    }
-
-    function onRegister(data) {
-        return Auth
-            .register(data)
-            .then(() => {
-                setIsTooltipPopupOpen(true);
-                setIsAccess(true);
-                history.push('/sign-in');
-            })
-            .catch(err => {
-                setIsAccess(false);
-                setIsTooltipPopupOpen(true);
-                return `${err}: ${err.message}`;
-            })
-    }
-
-    function onLogout() {
-        setLoggedIn(false);
-        localStorage.removeItem('jwt');
-        history.push('/sign-in');
     }
 
     useEffect(() => {

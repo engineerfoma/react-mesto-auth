@@ -4,7 +4,7 @@ import PopupWithForm from './PopupWithForm';
 function AddPlacePopup({ isOpen, onClose, onAddPlace, isLoading, onOverlayClick }) {
     const [title, setTitle] = React.useState('');
     const [link, setLink] = React.useState('');
-// пытался вникнуть в инфу про кастомный хук, но никак не осилил его :(
+
     React.useEffect(() => {
         setTitle('');
         setLink('')
