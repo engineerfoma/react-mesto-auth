@@ -1,0 +1,9 @@
+// Imports
+import ___CSS_LOADER_API_SOURCEMAP_IMPORT___ from "../../../../../node_modules/css-loader/dist/runtime/sourceMaps.js";
+import ___CSS_LOADER_API_IMPORT___ from "../../../../../node_modules/css-loader/dist/runtime/api.js";
+var ___CSS_LOADER_EXPORT___ = ___CSS_LOADER_API_IMPORT___(___CSS_LOADER_API_SOURCEMAP_IMPORT___);
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, ".popup__error_avatar {\r\n    top: 24px;\r\n    right: 0;\r\n    color: #f00;\r\n    font-family: 'Inter', Arial, sans-serif;\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    font-size: 12px;\r\n    line-height: 1.25;\r\n    margin-top: 5px;\r\n    width: 100%;\r\n}", "",{"version":3,"sources":["webpack://./src/blocks/popup/__error/_avatar/popup__error_avatar"],"names":[],"mappings":"AAAA;IACI,SAAS;IACT,QAAQ;IACR,WAAW;IACX,uCAAuC;IACvC,kBAAkB;IAClB,gBAAgB;IAChB,eAAe;IACf,iBAAiB;IACjB,eAAe;IACf,WAAW;AACf","sourcesContent":[".popup__error_avatar {\r\n    top: 24px;\r\n    right: 0;\r\n    color: #f00;\r\n    font-family: 'Inter', Arial, sans-serif;\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    font-size: 12px;\r\n    line-height: 1.25;\r\n    margin-top: 5px;\r\n    width: 100%;\r\n}"],"sourceRoot":""}]);
+// Exports
+___CSS_LOADER_EXPORT___.locals = {};
+export default ___CSS_LOADER_EXPORT___;
