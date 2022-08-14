@@ -20,4 +20,4 @@
 Реализовать бэкенд.
 
 ### Ссылка на сайт:
-https://engineerfoma.github.io/react-mestoauth/
+https://engineerfoma.github.io/react-mesto-auth/
