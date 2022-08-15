@@ -1,6 +1,6 @@
 {
-  "homepage": "https://github.com/engineerfoma/mesto-react-auth",
-  "name": "mesto-react-auth",
+  "homepage": "https://github.com/engineerfoma/react-mesto-auth",
+  "name": "react-mesto-auth",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
